@@ -1,0 +1,103 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="col-12">
+  <a href="{% url 'logout' %}" class="btn btn-danger float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+  </svg></a>
+</div>
+  <h2 class="mb-3">Lista de transportes</h2>
+  {% if transportes %}
+    <p>Actualmente tienes: {{ transportes|length }} transportes</p>
+  {% else %}
+    <p>No se encontraron transportes.</p>
+  {% endif %}
+  <form class="mb-4" method="get">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Buscar" value="{{ request.GET.q }}">
+      {% if request.GET.q %}
+  <a href="{% url 'transporte_list' %}" class="btn btn-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+  </svg></a>
+{% endif %}<button type="submit" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg></button>
+      
+
+      
+    </div>
+    <div class="btn-group">
+      <a href="{% url 'transporte_create' %}" class="btn btn-success mx-1 mt-2">Agregar transporte</a>
+      <a href="{% url 'escuela_create' %}" class="btn btn-primary mx-1 mt-2">Agregar Escuela</a>
+    </div>
+    
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Patente</th>
+        <th>Oferente</th>
+        <th>Cantidad de KM</th>
+        <th>Alumnos</th>
+        <th>Sectores</th>
+        <th>Escuela</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transporte in transportes %}
+        <tr>
+          <td>{{ transporte.patente }}</td>
+          <td>{{ transporte.oferente }}</td>
+          <td>{{ transporte.cantidad_km }}</td>
+          <td>{{ transporte.alumnos }}</td>
+          <td>{{ transporte.sectores }}</td>
+          <td>{{ transporte.escuela }}</td>
+          <td>
+            <div class="btn-group">
+              <a href="{{ transporte.url_mapa }}" class="btn btn-success btn-sm mx-1" target="_blank">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill d-inline" viewBox="0 0 16 16">
+                  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                </svg>
+              </a>
+              <a href="{% url 'transporte_update' transporte.patente %}" class="btn btn-warning btn-sm mx-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+              </a>
+              
+              
+              <a href="{% url 'transporte_delete' transporte.patente %}" class="btn btn-danger btn-sm mx-1" onclick="return confirm('¿Estás seguro de que deseas eliminar este elemento?')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                </svg>
+              </a>
+              
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="exportarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      Exportar
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="exportarDropdown">
+      {% comment %} <li><a class="dropdown-item" href="{% url 'export_escuelas_csv' %}">Exportar escuelas a CSV</a></li> {% endcomment %}
+      <li><a class="dropdown-item" href="{% url 'export_escuelas_excel' %}">Exportar escuelas a Excel</a></li>
+      {% comment %} <li><a class="dropdown-item" href="{% url 'export_escuelas_pdf' %}">Exportar escuelas a PDF</a></li> {% endcomment %}
+      {% comment %} <li><hr class="dropdown-divider"></li> {% endcomment %}
+      {% comment %} <li><a class="dropdown-item" href="{% url 'export_transportes_csv' %}">Exportar transportes a CSV</a></li> {% endcomment %}
+      <li><a class="dropdown-item" href="{% url 'export_transportes_excel' %}">Exportar transportes a Excel</a></li>
+      {% comment %} <li><a class="dropdown-item" href="{% url 'export_transportes_pdf' %}">Exportar transportes a PDF</a></li> {% endcomment %}
+    </ul>
+  </div>
+  
+  
+
+{% endblock %}

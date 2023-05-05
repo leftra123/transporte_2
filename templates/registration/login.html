@@ -1,0 +1,47 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h2 class="text-center mb-4">Iniciar sesión</h2>
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" value="{{ form.username.value|default:'' }}" required>
+                    <label for="{{ form.username.id_for_label }}">Usuario:</label>
+                    <div class="invalid-feedback">
+                        Por favor, introduce un nombre de usuario válido.
+                    </div>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" required>
+                    <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+                    <div class="invalid-feedback">
+                        Por favor, introduce una contraseña válida.
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary mt-4">Iniciar sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+{% endblock %}
