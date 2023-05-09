@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Transporte, Escuela
 from .forms import TransporteForm
-from django.db.models import Q
+from django.db.models import Q, Sum
 from .forms import EscuelaForm
 from django.contrib.auth.decorators import login_required
 import csv
@@ -15,7 +15,7 @@ from django.template.loader import get_template
 from io import BytesIO
 
 
-@login_required
+# @login_required
 def transporte_list(request):
     query = request.GET.get('q', '')
     if query:
@@ -29,10 +29,12 @@ def transporte_list(request):
         )
     else:
         transportes = Transporte.objects.all()
-    return render(request, 'transporte/transporte_list.html', {'transportes': transportes})
+    total_km = transportes.aggregate(Sum('cantidad_km'))['cantidad_km__sum']
+    total_alumnos = transportes.aggregate(Sum('alumnos'))['alumnos__sum']
+    return render(request, 'transporte/transporte_list.html', {'transportes': transportes, 'total_km': total_km, 'total_alumnos': total_alumnos})
 
 
-@login_required
+# @login_required
 def transporte_create(request):
     if request.method == 'POST':
         form = TransporteForm(request.POST)
@@ -44,7 +46,7 @@ def transporte_create(request):
     return render(request, 'transporte/transporte_form.html', {'form': form})
 
 
-@login_required
+# @login_required
 def transporte_update(request, patente):
     transporte = Transporte.objects.get(patente=patente)
     if request.method == 'POST':
@@ -57,14 +59,14 @@ def transporte_update(request, patente):
     return render(request, 'transporte/transporte_form.html', {'form': form})
 
 
-@login_required
+# @login_required
 def transporte_delete(request, patente):
     transporte = Transporte.objects.get(patente=patente)
     transporte.delete()
     return redirect('transporte_list')
 
 
-@login_required
+# @login_required
 def escuela_create(request):
     if request.method == 'POST':
         form = EscuelaForm(request.POST)
@@ -76,7 +78,7 @@ def escuela_create(request):
     return render(request, 'transporte/escuela_form.html', {'form': form})
 
 
-@login_required
+# @login_required
 def profile_view(request):
     return render(request, 'transporte_list.html')
 
