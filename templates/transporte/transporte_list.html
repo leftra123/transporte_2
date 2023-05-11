@@ -26,8 +26,11 @@
         </div>
         <div class="btn-group">
         <a href="{% url 'transporte_create' %}" class="btn btn-outline-success mx-1 mt-2">Agregar Transporte</a>
-        <a href="{% url 'escuela_create' %}" class="btn btn-outline-primary mx-1 mt-2">Agregar Escuela</a>
+        {% comment %} <a href="{% url 'escuela_create' %}" class="btn btn-outline-primary mx-1 mt-2">Agregar Escuela</a> {% endcomment %}
         <a href="{% url 'oferente_create' %}" class="btn btn-outline-primary mx-1 mt-2">Agregar Oferente</a>
+        <a href="{% url 'chofer_create' %}" class="btn btn-outline-primary mx-1 mt-2">Agregar Chofer</a>
+        <a href="{% url 'export_data' %}" class="btn btn-outline-primary mx-1 mt-2">Exportar Datos</a>
+
         </div>
         
         </form>

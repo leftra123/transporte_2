@@ -11,6 +11,7 @@ urlpatterns = [
     path('oferente/update/<int:id>/', views.oferente_update, name='oferente_update'),
     path('chofer/create/', views.chofer_create, name='chofer_create'),
     path('chofer/update/<int:id>/', views.chofer_update, name='chofer_update'),
+    path('export/', views.export_data, name='export_data'),
     # path('export/escuelas/csv/', views.export_escuelas_csv, name='export_escuelas_csv'),
     # path('export/transportes/csv/', views.export_transportes_csv, name='export_transportes_csv'),
     # path('export/escuelas/excel/', views.export_escuelas_excel, name='export_escuelas_excel'),
