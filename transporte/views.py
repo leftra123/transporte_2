@@ -39,10 +39,8 @@ def transporte_create(request):
     if request.method == 'POST':
         form = TransporteForm(request.POST)
         if form.is_valid():
-            transporte = form.save(commit=False)  # Guarda el objeto sin guardar las relaciones ManyToMany
-            transporte.save()  # Guarda el objeto sin las relaciones ManyToMany
-
-            # Establece las relaciones ManyToMany y guarda de nuevo el objeto
+            transporte = form.save(commit=False)
+            transporte.save()
             escuelas = request.POST.getlist('escuela_set')
             for escuela_id in escuelas:
                 escuela = Escuela.objects.get(pk=escuela_id)
@@ -72,9 +70,15 @@ def transporte_update(request, patente):
 
 # @login_required
 def transporte_delete(request, patente):
-    transporte = Transporte.objects.get(patente=patente)
-    transporte.delete()
-    return redirect('transporte_list')
+    transportes = Transporte.objects.filter(patente=patente)
+    
+    if request.method == 'POST':
+        transportes.delete()
+        return redirect('transporte_list')
+    else:
+        transporte = transportes.first() if transportes else None
+        return render(request, 'transporte/transporte_confirm_delete.html', {'object': transporte})
+
 
 
 # @login_required
@@ -126,35 +130,35 @@ def profile_view(request):
 #     return response
 
 
-def export_escuelas_excel(request):
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Escuelas"
+# # # def export_escuelas_excel(request):
+# # #     wb = Workbook()
+# # #     ws = wb.active
+# # #     ws.title = "Escuelas"
 
-    ws.append(['RBD', 'Digito Verificador', 'Nombre'])
+# # #     ws.append(['RBD', 'Digito Verificador', 'Nombre'])
 
-    for escuela in Escuela.objects.all():
-        ws.append([escuela.rbd, escuela.digito_verificador, escuela.nombre])
+# # #     for escuela in Escuela.objects.all():
+# # #         ws.append([escuela.rbd, escuela.digito_verificador, escuela.nombre])
 
-    response = HttpResponse(save_virtual_workbook(
-        wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=escuelas.xlsx'
-    return response
+# # #     response = HttpResponse(save_virtual_workbook(
+# # #         wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+# # #     response['Content-Disposition'] = 'attachment; filename=escuelas.xlsx'
+# # #     return response
 
 
-def export_transportes_excel(request):
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Transportes"
+# # # def export_transportes_excel(request):
+# # #     wb = Workbook()
+# # #     ws = wb.active
+# # #     ws.title = "Transportes"
 
-    ws.append(['Patente', 'Oferente', 'Cantidad KM', 'Alumnos', 'Sectores', 'Escuela', 'RBD', 'DV', 'URL Mapa'])
+# # #     ws.append(['Patente', 'Oferente', 'Cantidad KM', 'Alumnos', 'Sectores', 'Escuela', 'RBD', 'DV', 'URL Mapa'])
 
-    for transporte in Transporte.objects.all():
-        ws.append([transporte.patente, transporte.oferente, transporte.cantidad_km, transporte.alumnos, transporte.sectores, transporte.escuela.nombre, transporte.escuela.rbd, transporte.escuela.digito_verificador, transporte.url_mapa])
+# # #     for transporte in Transporte.objects.all():
+# # #         ws.append([transporte.patente, transporte.oferente, transporte.cantidad_km, transporte.alumnos, transporte.sectores, transporte.escuela.nombre, transporte.escuela.rbd, transporte.escuela.digito_verificador, transporte.url_mapa])
 
-    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=transportes.xlsx'
-    return response
+# # #     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+# # #     response['Content-Disposition'] = 'attachment; filename=transportes.xlsx'
+# # #     return response
 
 
 
