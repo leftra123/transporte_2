@@ -1,5 +1,5 @@
 from django import forms
-from .models import Transporte, Escuela
+from .models import Transporte, Escuela, Oferente, Chofer
 
 class TransporteForm(forms.ModelForm):
     escuela_set = forms.ModelMultipleChoiceField(
@@ -7,10 +7,15 @@ class TransporteForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
+    chofer = forms.ModelChoiceField(
+        queryset=Chofer.objects.all(),
+        widget=forms.Select,
+        required=True
+    )
 
     class Meta:
         model = Transporte
-        fields = ('patente', 'oferente', 'cantidad_km', 'alumnos', 'sectores', 'escuela_set', 'url_mapa')
+        fields = ('patente', 'oferente', 'chofer', 'cantidad_km', 'alumnos', 'sectores', 'escuela_set', 'url_mapa')
 
     def __init__(self, *args, **kwargs):
         super(TransporteForm, self).__init__(*args, **kwargs)
@@ -23,30 +28,8 @@ class TransporteForm(forms.ModelForm):
         instance.escuela.set(self.cleaned_data['escuela_set'])
         return instance
 
-# class TransporteForm(forms.ModelForm):
-#     class Meta:
-#         model = Transporte
-#         fields = '__all__'
-#         widgets = {
-#             'patente': forms.TextInput(attrs={'class': 'form-control'}),
-#             'oferente': forms.TextInput(attrs={'class': 'form-control'}),
-#             'cantidad_km': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'alumnos': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'sectores': forms.TextInput(attrs={'class': 'form-control'}),
-#             'escuela': forms.Select(attrs={'class': 'form-select'}),
-#             'url_mapa': forms.URLInput(attrs={'class': 'form-control'}),
-#         }
-#         labels = {
-#             'patente': 'Patente',
-#             'oferente': 'Oferente',
-#             'cantidad_km': 'Cantidad de KM',
-#             'alumnos': 'Alumnos',
-#             'sectores': 'Sectores',
-#             'escuela': 'Escuela',
-#             'url_mapa': 'URL del mapa'
-#         }
 
-        
+     
 
 class EscuelaForm(forms.ModelForm):
     class Meta:
@@ -61,4 +44,32 @@ class EscuelaForm(forms.ModelForm):
             'rbd': 'RBD',
             'digito_verificador': 'Dígito Verificador',
             'nombre': 'Nombre',
+        }
+
+class OferenteForm(forms.ModelForm):
+    class Meta:
+        model = Oferente
+        fields = '__all__'
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'rut': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'nombre': 'Nombre',
+            'rut': 'RUT',
+        }
+
+class ChoferForm(forms.ModelForm):
+    class Meta:
+        model = Chofer
+        fields = '__all__'
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'rut': forms.TextInput(attrs={'class': 'form-control'}),
+            'oferente': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'nombre': 'Nombre',
+            'rut': 'RUT',
+            'oferente': 'Oferente',
         }

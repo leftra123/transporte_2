@@ -35,8 +35,12 @@
                   {{ form.oferente|add_class:'form-control' }}
                 </div>
               </div>
-            </div>
-            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.chofer.id_for_label }}" class="form-label">Chofer</label>
+                  {{ form.chofer|add_class:'form-control' }}
+                </div>
+              </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="{{ form.cantidad_km.id_for_label }}" class="form-label">Cantidad de KM</label>
@@ -49,26 +53,27 @@
                   {{ form.alumnos|add_class:'form-control' }}
                 </div>
               </div>
-            </div>
+
+            <div class="col-md-6">
             <div class="form-group">
               <label for="{{ form.sectores.id_for_label }}" class="form-label">Sectores</label>
               {{ form.sectores|add_class:'form-control' }}
             </div>
-
+            </div>
               <div class="form-group">
                 <label for="{{ form.escuela_set.id_for_label }}" class="form-label">Escuela</label>
                 {{ form.escuela_set }}
               </div>
-              
+              <div class="form-group">
+                <label for="{{ form.url_mapa.id_for_label }}" class="form-label">URL del mapa</label>
+                {{ form.url_mapa|add_class:'form-control' }}
+            </div>
 
 
           </div>
           
-            <div class="form-group">
-              <label for="{{ form.url_mapa.id_for_label }}" class="form-label">URL del mapa</label>
-              {{ form.url_mapa|add_class:'form-control' }}
-          </div>
-            <div class="form-group mt-4">
+            
+            <div class="form-group mt-4 text-center">
               <button type="submit" class="btn btn-primary mr-2">Guardar</button>
               <a href="{% url 'transporte_list' %}" class="btn btn-secondary">Cancelar</a>
               {% if form.url_mapa.value %}
