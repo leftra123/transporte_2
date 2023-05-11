@@ -54,7 +54,14 @@
                 <td class="text-end">{{ transporte.cantidad_km }}</td>
                 <td class="text-end">{{ transporte.alumnos }}</td>
                 <td>{{ transporte.sectores }}</td>
-                <td>{{ transporte.escuela }}</td>
+                <td>
+                  {% for escuela in transporte.escuela.all %}
+                    {{ escuela.nombre }}{% if not forloop.last %}, {% endif %}
+                  {% empty %}
+                    Ninguna
+                  {% endfor %}
+                </td>
+                
                 <td>
                   <div class="btn-group">
                     <a href="{{ transporte.url_mapa }}" class="btn btn-success btn-sm mx-1" target="_blank">

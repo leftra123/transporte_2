@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 import csv
 from django.http import HttpResponse
 from openpyxl import Workbook
-from openpyxl.writer.excel import save_virtual_workbook
+# from openpyxl.writer.excel import save_virtual_workbook
 from django.http import FileResponse
 from datetime import datetime
 from django.template.loader import get_template
@@ -39,11 +39,21 @@ def transporte_create(request):
     if request.method == 'POST':
         form = TransporteForm(request.POST)
         if form.is_valid():
-            form.save()
+            transporte = form.save(commit=False)  # Guarda el objeto sin guardar las relaciones ManyToMany
+            transporte.save()  # Guarda el objeto sin las relaciones ManyToMany
+
+            # Establece las relaciones ManyToMany y guarda de nuevo el objeto
+            escuelas = request.POST.getlist('escuela_set')
+            for escuela_id in escuelas:
+                escuela = Escuela.objects.get(pk=escuela_id)
+                transporte.escuela.add(escuela)
+            transporte.save()
+
             return redirect('transporte_list')
     else:
         form = TransporteForm()
     return render(request, 'transporte/transporte_form.html', {'form': form})
+
 
 
 # @login_required
@@ -53,6 +63,7 @@ def transporte_update(request, patente):
         form = TransporteForm(request.POST, instance=transporte)
         if form.is_valid():
             form.save()
+            form.save_m2m()
             return redirect('transporte_list')
     else:
         form = TransporteForm(instance=transporte)
